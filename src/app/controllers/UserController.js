@@ -37,7 +37,7 @@ class UserController {
     } catch (err) {
       if (err.name === 'SequelizeForeignKeyConstraintError') {
         return res
-          .status(500)
+          .status(400)
           .json({ error: 'O avatar informado não existe.' });
       }
 

@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 export default {
   storage: multer.diskStorage({
-    destination: resolve('public', 'avatars'),
+    destination: resolve(__dirname, '..', '..', 'public', 'avatars'),
     filename: (req, file, cb) => {
       randomBytes(16, (err, res) => {
         if (err) return cb(err);

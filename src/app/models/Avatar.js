@@ -6,14 +6,14 @@ class Avatar extends Model {
   static init(sequelize) {
     super.init(
       {
-        file_name: Sequelize.STRING,
-        original_name: Sequelize.STRING,
-        path: Sequelize.STRING,
+        filename: Sequelize.STRING,
+        originalname: Sequelize.STRING,
+        size: Sequelize.INTEGER,
         url: {
           type: Sequelize.VIRTUAL,
           get() {
             // This url will change if avatars are stored externally (AWS)
-            return `${process.env.APP_URL}/public/${this.path}`;
+            return `${process.env.APP_URL}/public/avatars/${this.filename}`;
           },
         },
       },

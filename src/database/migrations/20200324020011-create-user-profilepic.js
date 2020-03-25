@@ -6,17 +6,17 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      file_name: {
+      filename: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
-      original_name: {
+      originalname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      path: {
-        type: Sequelize.STRING,
+      size: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       created_at: {
