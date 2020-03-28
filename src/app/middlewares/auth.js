@@ -4,12 +4,11 @@ import authConfig from '../../config/authToken';
 
 async function checkAuthToken(req, res, next) {
   const { authorization } = req.headers;
-  const token = authorization.split(' ')[1];
-
-  if (!token) {
+  if (!authorization) {
     return res.status(401).json({ error: 'Autenticação requerida.' });
   }
 
+  const token = authorization.split(' ')[1];
   const { secret } = authConfig;
 
   try {

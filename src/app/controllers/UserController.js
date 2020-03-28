@@ -1,11 +1,14 @@
 import User from '../models/User';
 
-import { userDataValidation } from '../helpers/dataValidation';
+import {
+  validateUserData,
+  validateUserUpdate,
+} from '../helpers/dataValidation';
 
 class UserController {
   async store(req, res) {
     try {
-      await userDataValidation(req.body);
+      await validateUserData(req.body);
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
@@ -42,6 +45,61 @@ class UserController {
       }
 
       return res.status(500).json({ error: 'Erro ao criar usuário.' });
+    }
+  }
+
+  async update(req, res) {
+    const { userId } = req;
+    try {
+      await validateUserUpdate(req.body);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+
+    const { email, oldPassword } = req.body;
+
+    try {
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        return res.status(400).json({ error: 'Usuário não encontrado.' });
+      }
+
+      console.log('new:', email);
+      if (email && email !== user.email) {
+        const newEmailInvalid = await User.findOne({
+          where: { email },
+        });
+
+        if (newEmailInvalid) {
+          return res.status(400).json({ error: 'E-mail já cadastrado.' });
+        }
+      }
+
+      if (oldPassword && !(await user.validatePassword(oldPassword))) {
+        return res.status(401).json({ error: 'Senha incorreta.' });
+      }
+
+      const {
+        id,
+        name,
+        description,
+        birthday,
+        course,
+        email: newEmail,
+      } = await user.update(req.body);
+
+      return res.json({
+        id,
+        name,
+        email: newEmail,
+        description,
+        birthday,
+        course,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Erro ao atualizar usuário.' });
     }
   }
 }
