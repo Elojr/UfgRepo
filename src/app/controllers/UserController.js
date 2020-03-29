@@ -9,17 +9,22 @@ class UserController {
   async store(req, res) {
     try {
       await validateUserData(req.body);
+
+      const { is_admin } = req.body;
+      if (is_admin) {
+        throw new Error('Requisição inválida.');
+      }
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
 
-    const user = await User.findOne({ where: { email: req.body.email } });
-
-    if (user) {
-      return res.status(400).json({ error: 'O usuário já existe.' });
-    }
-
     try {
+      const user = await User.findOne({ where: { email: req.body.email } });
+
+      if (user) {
+        return res.status(400).json({ error: 'O usuário já existe.' });
+      }
+
       const {
         id,
         name,
@@ -43,7 +48,6 @@ class UserController {
           .status(400)
           .json({ error: 'O avatar informado não existe.' });
       }
-
       return res.status(500).json({ error: 'Erro ao criar usuário.' });
     }
   }
@@ -52,6 +56,11 @@ class UserController {
     const { userId } = req;
     try {
       await validateUserUpdate(req.body);
+
+      const { is_admin } = req.body;
+      if (is_admin) {
+        throw new Error('Requisição inválida.');
+      }
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
@@ -65,7 +74,6 @@ class UserController {
         return res.status(400).json({ error: 'Usuário não encontrado.' });
       }
 
-      console.log('new:', email);
       if (email && email !== user.email) {
         const newEmailInvalid = await User.findOne({
           where: { email },
@@ -98,7 +106,6 @@ class UserController {
         course,
       });
     } catch (err) {
-      console.log(err);
       return res.status(500).json({ error: 'Erro ao atualizar usuário.' });
     }
   }

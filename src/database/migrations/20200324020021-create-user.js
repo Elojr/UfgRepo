@@ -32,6 +32,7 @@ module.exports = {
         allowNull: false,
       },
       is_admin: {
+        // TODO: Check admin issues when creating and updating users
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
