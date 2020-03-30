@@ -15,11 +15,8 @@ class Database {
   async sequelize() {
     this.connection = new Sequelize(sequelizeConfig);
 
-    try {
-      await this.connection.authenticate();
-      console.log('Conexão estabelecida com o banco de dados.');
-    } catch (err) {
-      console.log('Erro ao estabelecer conexão com o banco de dados.', err);
+    if (process.env.NODE_ENV === 'test') {
+      this.connection.options.logging = false;
     }
 
     models.forEach(model => {

@@ -13,7 +13,7 @@ class LoginController {
     }
 
     if (!(await user.validatePassword(password))) {
-      return res.status(401).json({ error: 'Senha incorreta' });
+      return res.status(401).json({ error: 'Senha incorreta.' });
     }
 
     const { id, name } = user;
