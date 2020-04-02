@@ -3,6 +3,7 @@ import request from 'supertest';
 
 import app from '../../src/app';
 import truncate from '../truncate';
+import User from '../../src/app/models/User';
 
 import {
   generateUser,
@@ -125,5 +126,61 @@ describe('UserController', () => {
       .expect(401);
 
     expect(response.body).toEqual({ error: 'Senha incorreta.' });
+  });
+
+  it('An admin user should be able to delete an user', async () => {
+    const user = generateUser();
+    const userToDelete = generateUser();
+    const { email, password } = user;
+    await User.create({ ...user, is_admin: true });
+
+    const { body } = await request(app)
+      .post('/login')
+      .send({ email, password })
+      .expect(200);
+
+    const responseToDelete = await request(app)
+      .post('/users')
+      .send(userToDelete)
+      .expect(200);
+
+    const { token } = body;
+
+    const response = await request(app)
+      .delete(`/users/${responseToDelete.body.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('A non admin user should not be able to delete another user', async () => {
+    const user = generateUser();
+    const userToBeDeleted = generateUser();
+
+    await request(app)
+      .post('/users')
+      .send(user)
+      .expect(200);
+
+    await request(app)
+      .post('/users')
+      .send(userToBeDeleted)
+      .expect(200);
+
+    const { email, password } = user;
+
+    const { body } = await request(app)
+      .post('/login')
+      .send({ email, password })
+      .expect(200);
+
+    const { token } = body;
+    const response = await request(app)
+      .delete(`/users/${userToBeDeleted.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403);
+
+    expect(response.body).toHaveProperty('error');
   });
 });

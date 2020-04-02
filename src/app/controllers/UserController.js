@@ -109,6 +109,31 @@ class UserController {
       return res.status(500).json({ error: 'Erro ao atualizar usuário.' });
     }
   }
+
+  async delete(req, res) {
+    const user = await User.findByPk(req.userId);
+    if (!user.is_admin) {
+      return res.status(403).json({ error: 'Ação não autorizada ' });
+    }
+
+    const { id } = req.params;
+    if (!Number.isInteger(Number.parseInt(id, 10))) {
+      return res.status(400).json({ error: 'Requisição inválida.' });
+    }
+
+    try {
+      const userToBeDeleted = await User.findByPk(id);
+      if (!userToBeDeleted) {
+        return res.status(400).json({ error: 'Usuário não encontrado.' });
+      }
+
+      await userToBeDeleted.destroy();
+
+      return res.json({ id });
+    } catch (err) {
+      return res.status(500).json({ error: 'Erro ao deletar o usuário.' });
+    }
+  }
 }
 
 export default new UserController();

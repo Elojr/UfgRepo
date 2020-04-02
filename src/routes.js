@@ -18,6 +18,7 @@ routes.post('/login', LoginController.store);
 routes.use(checkAuthToken);
 
 routes.put('/users', UserController.update);
+routes.delete('/users/:id', UserController.delete);
 
 routes.get('/', (req, res) =>
   res.json({ message: 'Hello World', id: req.userId })
