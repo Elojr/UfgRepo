@@ -103,3 +103,19 @@ export async function validateProfessorData(data) {
 
   return schema.validate(data);
 }
+
+export async function validateProfessorUpdate(data) {
+  const schema = Yup.object().shape({
+    name: Yup.string().max(
+      50,
+      'O nome não deve ter mais do que 50 caracteres.'
+    ),
+
+    email: Yup.string().email('O e-mail deve ser válido.'),
+    description: Yup.string().max(
+      255,
+      'A descrição deve ter no máximo 300 caracteres'
+    ),
+  });
+  return schema.validate(data);
+}
