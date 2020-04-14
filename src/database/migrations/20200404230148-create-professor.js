@@ -2,7 +2,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('professor', {
       id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
@@ -16,7 +16,7 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       description: {
         type: Sequelize.STRING,
