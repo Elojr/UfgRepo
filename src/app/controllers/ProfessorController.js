@@ -11,8 +11,6 @@ import User from '../models/User';
 class ProfessorController {
   async store(req, res) {
     await validateProfessorData(req.body);
-    // devo fazer a validação se já existe o professor? pq lembro que a gente deixaria a pessoa cadastrar
-    // e teria um get para auto complete
 
     const { name, institute, email, description } = await Professors.create(
       req.body
@@ -27,7 +25,7 @@ class ProfessorController {
   }
 
   async update(req, res) {
-    const updateProfessor = await professor.findOne({
+    const updateProfessor = await Professors.findOne({
       where: { name: req.body.name },
     });
 
