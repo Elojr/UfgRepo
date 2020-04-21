@@ -3,6 +3,7 @@ import { Router } from 'express';
 import UserController from './app/controllers/UserController';
 import AvatarController from './app/controllers/AvatarController';
 import LoginController from './app/controllers/LoginController';
+import SubjectController from './app/controllers/SubjectController';
 
 import uploadAvatar from './app/helpers/fileUpload';
 import checkAuthToken from './app/middlewares/auth';
@@ -18,7 +19,14 @@ routes.post('/login', LoginController.store);
 routes.use(checkAuthToken);
 
 routes.put('/users', UserController.update);
+
 routes.delete('/users/:id', UserController.delete);
+
+routes.post('/subjects', SubjectController.store);
+
+routes.delete('/subjects/:id', SubjectController.delete);
+
+routes.put('/subjects', SubjectController.update);
 
 routes.get('/', (req, res) =>
   res.json({ message: 'Hello World', id: req.userId })

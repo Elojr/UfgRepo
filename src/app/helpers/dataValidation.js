@@ -81,3 +81,16 @@ export async function validateUserUpdate(data) {
   });
   return schema.validate(data);
 }
+
+export async function validateSubjectData(data) {
+  const schema = Yup.object().shape({
+    name: Yup.string()
+      .max(60, 'O nome não deve ter mais que 60 caracteres.')
+      .required('O campo nome é obrigatório'),
+    institute: Yup.string()
+      .max(30, 'O tamanho máximo para o nome do instituto são 30 caracteres')
+      .required('Informe o instituto que oferece a matéria.'),
+  });
+
+  return schema.validate(data);
+}
